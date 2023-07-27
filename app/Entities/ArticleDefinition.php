@@ -12,6 +12,7 @@ class ArticleDefinition
     public const IMAGE_URL = 'image_url';
     public const ARTICLE_URL = 'article_url';
     public const NEWS_PROVIDER_TYPE = 'news_provider_type';
+    public const CATEGORY = 'category';
     public const SOURCE_ID = 'source_id';
 
     public const FILLABLES = [
@@ -21,6 +22,7 @@ class ArticleDefinition
         self::PUBLISH_DATE,
         self::IMAGE_URL,
         self::ARTICLE_URL,
+        self::CATEGORY,
         self::SOURCE_ID
     ];
     public const HIDDEN = [];
