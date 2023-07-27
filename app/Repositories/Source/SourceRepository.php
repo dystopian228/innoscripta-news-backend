@@ -6,7 +6,7 @@ use App\Models\Source;
 
 class SourceRepository extends \App\Repositories\Base\BaseRepository implements ISourceRepository
 {
-    protected function __construct(Source $model, array $defaultOrder = ['id' => 'desc'])
+    public function __construct(Source $model, array $defaultOrder = ['id' => 'desc'])
     {
         parent::__construct($model, $defaultOrder);
     }

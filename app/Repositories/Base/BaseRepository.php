@@ -114,10 +114,9 @@ abstract class BaseRepository implements IRepository
      * @param array $conditions
      * @param array $order
      * @param array $columns
-     * @return \Illuminate\Database\Query\Builder
      * @throws \Exception
      */
-    private function whereBase(array $conditions = array(), array $order = array(), array $columns = array('*')): \Illuminate\Database\Query\Builder
+    private function whereBase(array $conditions = array(), array $order = array(), array $columns = array('*'))
     {
         $order = empty($order) ? $this->defaultOrder : $order;
         $data = null;

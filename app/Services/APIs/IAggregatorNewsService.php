@@ -4,5 +4,5 @@ namespace App\Services\APIs;
 
 interface IAggregatorNewsService
 {
-
+    function populateAllNews();
 }

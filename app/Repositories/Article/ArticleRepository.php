@@ -7,7 +7,7 @@ use App\Repositories\Base\BaseRepository;
 
 class ArticleRepository extends BaseRepository implements IArticleRepository
 {
-    protected function __construct(Article $model, array $defaultOrder = ['id' => 'desc'])
+    public function __construct(Article $model, array $defaultOrder = ['id' => 'desc'])
     {
         parent::__construct($model, $defaultOrder);
     }

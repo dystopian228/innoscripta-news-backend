@@ -2,17 +2,17 @@
 
 namespace App\Enums;
 
-use App\Services\APIs\NYTimesService;
+use App\Transformers\NewYorkTimesTransformer;
 use App\Transformers\GuardianTransformer;
 use App\Transformers\NewsAPITransformer;
 
-enum NewsProvider
+enum NewsProvider: int
 {
-    case NEWS_API;
-    case NY_TIMES;
-    case THE_GUARDIAN;
+    case NEWS_API = 1;
+    case NY_TIMES = 2;
+    case THE_GUARDIAN = 3;
 
-    public function name(): string
+    public function getName(): string
     {
         return match($this)
         {
@@ -26,7 +26,7 @@ enum NewsProvider
     {
         return match ($this) {
             self::NEWS_API => NewsAPITransformer::class,
-            self::NY_TIMES => NYTimesService::class,
+            self::NY_TIMES => NewYorkTimesTransformer::class,
             self::THE_GUARDIAN => GuardianTransformer::class
         };
     }

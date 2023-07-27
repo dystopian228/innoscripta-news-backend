@@ -19,6 +19,7 @@ class RepositoryServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+
         $this->app->singleton(IArticleRepository::class, ArticleRepository::class);
         $this->app->singleton(IAuthorRepository::class, AuthorRepository::class);
         $this->app->singleton(ISourceRepository::class, SourceRepository::class);

@@ -2,12 +2,11 @@
 
 namespace App\Services\APIs;
 
-use App\Repositories\Article\ArticleRepository;
 use App\Repositories\Article\IArticleRepository;
 
-class AggregatorNewsService
+class AggregatorNewsService implements IAggregatorNewsService
 {
-    private ArticleRepository $articleRepository;
+    private IArticleRepository $articleRepository;
     private INewsAPIService $newsAPIService;
     private INYTimesService $nyTimesService;
     private IGuardianService $guardianService;
@@ -30,12 +29,21 @@ class AggregatorNewsService
 
  }
 
- function populateAllNews() {
+ public function populateAllNews() {
 
-     $this->newsAPIService->populateNews(100, 0, new \DateTime('yesterday'), new \DateTime('today'));
-     $this->guardianService->populateNews(100, 0, new \DateTime('yesterday'), new \DateTime('today'));
-     $this->nyTimesService->populateNews(100, 0, new \DateTime('yesterday'), new \DateTime('today'));
+     //Populate Sources for NewsAPI
+     $this->newsAPIService->populateSources();
 
+     //Popualte NewsAPI articles (Only 100 articles for developer accoun)
+     $this->newsAPIService->populateNews(100, 1, \Carbon\Carbon::yesterday()->toDateTime(), \Carbon\Carbon::today()->toDateTime());
+
+     //Populate The Guardian articles (100 articles)
+     $this->guardianService->populateNews(100, 1, \Carbon\Carbon::yesterday()->toDateTime(), \Carbon\Carbon::today()->toDateTime());
+
+     //Populate NY Times articles (100 articles) - endpoint has a fixed page size of 10.
+     for ($i = 0; $i < 10; $i++) {
+         $this->nyTimesService->populateNews(10, i, \Carbon\Carbon::yesterday()->toDateTime(), \Carbon\Carbon::today()->toDateTime());
+     }
  }
 
 }

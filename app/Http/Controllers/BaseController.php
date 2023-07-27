@@ -8,12 +8,12 @@ use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class BaseController extends Controller
 {
-    public function ok($data, $message = null): JsonResponse
+    public function ok($data, $message = 'Success'): JsonResponse
     {
         return response()->json(new Response($data, $message), HttpResponse::HTTP_OK);
     }
 
-    public function created($data, $message = null): JsonResponse
+    public function created($data, $message = 'Success'): JsonResponse
     {
         return response()->json(new Response($data, $message), HttpResponse::HTTP_CREATED);
     }

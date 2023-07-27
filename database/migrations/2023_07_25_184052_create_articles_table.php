@@ -14,14 +14,15 @@ return new class extends Migration
     {
         Schema::create(ArticleDefinition::TABLE_NAME, function (Blueprint $table) {
             $table->id();
-            $table->string(ArticleDefinition::TITLE);
-            $table->string(ArticleDefinition::HEADLINE)->nullable();
+            $table->text(ArticleDefinition::TITLE);
+            $table->text(ArticleDefinition::HEADLINE)->nullable();
             $table->text(ArticleDefinition::LEAD_PARAGRAPH)->nullable();
             $table->dateTime(ArticleDefinition::PUBLISH_DATE);
-            $table->string(ArticleDefinition::ARTICLE_URL);
-            $table->string(ArticleDefinition::IMAGE_URL)->nullable();
+            $table->text(ArticleDefinition::ARTICLE_URL);
+            $table->text(ArticleDefinition::IMAGE_URL)->nullable();
             $table->smallInteger(ArticleDefinition::NEWS_PROVIDER_TYPE);
-            $table->unsignedInteger(ArticleDefinition::SOURCE_ID);
+            $table->string(ArticleDefinition::CATEGORY)->default('Other');
+            $table->unsignedInteger(ArticleDefinition::SOURCE_ID)->constrained();
             $table->timestamps();
         });
     }

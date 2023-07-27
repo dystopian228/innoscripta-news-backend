@@ -16,8 +16,8 @@ abstract class ITransformer
      */
     public static function transform($json, NewsProvider $provider): array
     {
-        /** @var ITransformer $transformer */
-        $transformer = $provider->getTransformer();
+        /** @var string $transformer */
+        $transformer = app()->make($provider->getTransformer());
 
 
         return ['article' => $transformer->transformArticle($json),

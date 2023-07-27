@@ -16,9 +16,9 @@ return new class extends Migration
             $table->id();
             $table->string(SourceDefinition::SYMBOL);
             $table->string(SourceDefinition::NAME);
-            $table->string(SourceDefinition::DESCRIPTION)->nullable();
-            $table->string(SourceDefinition::URL)->nullable();
-            $table->string(SourceDefinition::MAIN_CATEGORY)->nullable();
+            $table->text(SourceDefinition::DESCRIPTION)->nullable();
+            $table->text(SourceDefinition::URL)->nullable();
+            $table->string(SourceDefinition::MAIN_CATEGORY)->default('Other');
             $table->string(SourceDefinition::COUNTRY)->nullable();
             $table->timestamps();
         });

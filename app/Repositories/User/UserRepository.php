@@ -7,7 +7,7 @@ use App\Repositories\Base\BaseRepository;
 
 class UserRepository extends BaseRepository implements IUserRepository
 {
-    protected function __construct(User $model, array $defaultOrder = ['id' => 'desc'])
+    public function __construct(User $model, array $defaultOrder = ['id' => 'desc'])
     {
         parent::__construct($model, $defaultOrder);
     }

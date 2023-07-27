@@ -8,6 +8,8 @@ use App\Entities\SourceDefinition;
 use App\Models\Article;
 use App\Models\Author;
 use App\Models\Source;
+use Carbon\Carbon;
+use App\Enums\NewsProvider;
 
 class NewYorkTimesTransformer extends ITransformer
 {
@@ -18,9 +20,12 @@ class NewYorkTimesTransformer extends ITransformer
         $article[ArticleDefinition::HEADLINE] = $json['abstract'];
         $article[ArticleDefinition::LEAD_PARAGRAPH] = $json['lead_paragraph'];
         $article[ArticleDefinition::ARTICLE_URL] = 'https://www.nytimes.com/' . $json['web_url'];
-        $article[ArticleDefinition::IMAGE_URL] = $json['multimedia']['url'];
-        $article[ArticleDefinition::PUBLISH_DATE] = $json['pub_date'];
+        if (!empty($json['multimedia'])) {
+            $article[ArticleDefinition::IMAGE_URL] = $json['multimedia'][0]['url'];
+        }
+        $article[ArticleDefinition::PUBLISH_DATE] = Carbon::createFromFormat('Y-m-d\TH:i:sO', $json['pub_date']);
         $article[ArticleDefinition::CATEGORY] = $json['section_name'];
+        $article[ArticleDefinition::NEWS_PROVIDER_TYPE] = NewsProvider::NY_TIMES;
 
         return $article;
     }

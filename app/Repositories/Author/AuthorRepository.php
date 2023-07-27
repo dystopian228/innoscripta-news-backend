@@ -7,7 +7,7 @@ use App\Repositories\Base\BaseRepository;
 
 class AuthorRepository extends BaseRepository implements IAuthorRepository
 {
-    protected function __construct(Author $model, array $defaultOrder = ['id' => 'desc'])
+    public function __construct(Author $model, array $defaultOrder = ['id' => 'desc'])
     {
         parent::__construct($model, $defaultOrder);
     }

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Entities\ArticleDefinition;
 use App\Entities\AuthorDefinition;
 use App\Entities\SourceDefinition;
+use App\Entities\ArticleAuthorDefinition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -33,11 +34,11 @@ class Article extends Model
      */
     protected $casts = [];
 
-    protected $with = [AuthorDefinition::TABLE_NAME, SourceDefinition::TABLE_NAME];
+    protected $with = [AuthorDefinition::TABLE_NAME, 'source'];
 
     public function authors(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Author::class);
+        return $this->belongsToMany(Author::class, ArticleAuthorDefinition::TABLE_NAME);
     }
 
     public function source(): \Illuminate\Database\Eloquent\Relations\BelongsTo
