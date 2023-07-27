@@ -24,12 +24,12 @@ class NewsAPIService extends BaseNewsService implements INewsAPIService
     {
 
         try {
-            $response = Http::acceptJson()->withHeader('X-Api-Key', Config::get('NEWS_API_API_KEY'))->withQueryParameters([
+            $response = Http::acceptJson()->withHeader('X-Api-Key', Config::get('NewsAPIKey'))->withQueryParameters([
                 'pageSize' => $pageSize,
                 'page' => $page,
                 'from' => $startDate->format(\DateTime::ATOM),
                 'to' => $endDate->format(\DateTime::ATOM)
-            ])->get(Config::get('NEWS_API_URL') . '/everything');
+            ])->get(Config::get('NewsAPIBaseUrl') . '/everything');
 
             if ($response->successful()) {
                 foreach ($response->json()['articles'] as $articleJson) {
@@ -79,8 +79,8 @@ class NewsAPIService extends BaseNewsService implements INewsAPIService
     function populateSources(): void
     {
         try {
-            $response = Http::acceptJson()->withHeader('X-Api-Key', Config::get('NEWS_API_API_KEY'))
-                ->get(Config::get('NEWS_API_URL') . '/top-headlines/sources');
+            $response = Http::acceptJson()->withHeader('X-Api-Key', Config::get('NewsAPIKey'))
+                ->get(Config::get('NewsAPIBaseUrl') . '/top-headlines/sources');
 
 
             if ($response->successful()) {

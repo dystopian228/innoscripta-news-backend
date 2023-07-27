@@ -14,23 +14,25 @@ use App\Transformers\ITransformer;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 
-class GuardianService extends BaseNewsService implements IGuardianService
+class NYTimesService extends BaseNewsService implements INYTimesService
 {
-    protected string $logFile = 'services logs/the_guardian.log';
-    protected string $providerName = 'The Guardian';
-    public function populateNews(int $pageSize, int $page, \DateTime $startDate, \DateTime $endDate): array
+    protected string $logFile = 'services logs/ny_times.log';
+    protected string $providerName = 'New York Times API';
+    public function populateNews(int $pageSize, int $page, \DateTime $startDate, \DateTime $endDate): void
     {
+
         $response = Http::acceptJson()->withQueryParameters([
-            'api-key' => Config::get('TheGuardianAPIKey'),
-            'page-size' => $pageSize,
+            'api-key' => Config::get('NYTimesAPIKey'),
+            'pageSize' => $pageSize,
             'page' => $page,
-            'from-date' => $startDate->format('Y-m-d'),
-            'to-date	' => $endDate->format('Y-m-d')
-        ])->get(Config::get('TheGuardianBaseUrl').'/search');
+            'begin_date' => $startDate->format('Ymd'),
+            'end_date' => $endDate->format('Ymd')
+        ])->get(Config::get('NYTimesBaseUrl').'/articlesearch.json');
 
         if ($response->successful()) {
-            foreach ($response->json()['articles'] as $articleJson) {
-                $transformResult = ITransformer::transform($articleJson, NewsProvider::THE_GUARDIAN);
+            foreach ($response->json()['response']['docs'] as $articleJson) {
+                $transformResult = ITransformer::transform($articleJson, NewsProvider::NY_TIMES);
+
                 /** @var Article $article */
                 $article = $transformResult['article'];
                 /** @var array<Author> $author */
@@ -60,7 +62,5 @@ class GuardianService extends BaseNewsService implements IGuardianService
         } else {
             $this->writeToLog($response->body());
         }
-
-        return [];
     }
 }
