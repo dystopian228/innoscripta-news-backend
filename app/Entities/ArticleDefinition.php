@@ -14,6 +14,8 @@ class ArticleDefinition
     public const NEWS_PROVIDER_TYPE = 'news_provider_type';
     public const CATEGORY = 'category';
     public const SOURCE_ID = 'source_id';
+    public const AUTHORS_RELATION = 'authors';
+    public const SOURCE_RELATION = 'source';
 
     public const FILLABLES = [
         self::TITLE,

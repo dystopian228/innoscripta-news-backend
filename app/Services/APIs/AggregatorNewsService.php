@@ -2,6 +2,7 @@
 
 namespace App\Services\APIs;
 
+use App\Entities\ArticleDefinition;
 use App\Repositories\Article\IArticleRepository;
 
 class AggregatorNewsService implements IAggregatorNewsService
@@ -25,7 +26,9 @@ class AggregatorNewsService implements IAggregatorNewsService
 
  function paginateNews($filter, int $pageSize = 15) {
 
-     $articles = $this->articleRepository->paginate($pageSize, conditions: []);
+     $articles = $this->articleRepository->paginate($pageSize, order: ['publish_date' => 'desc'], conditions: $filter);
+
+     return $articles;
 
  }
 
@@ -42,8 +45,16 @@ class AggregatorNewsService implements IAggregatorNewsService
 
      //Populate NY Times articles (100 articles) - endpoint has a fixed page size of 10.
      for ($i = 0; $i < 10; $i++) {
-         $this->nyTimesService->populateNews(10, i, \Carbon\Carbon::yesterday()->toDateTime(), \Carbon\Carbon::today()->toDateTime());
+         $this->nyTimesService->populateNews(10, $i, \Carbon\Carbon::yesterday()->toDateTime(), \Carbon\Carbon::today()->toDateTime());
      }
+ }
+
+ public function getDistinctCategories() {
+     $categories = $this->articleRepository->distinct(ArticleDefinition::CATEGORY, columns: [ArticleDefinition::CATEGORY]);
+     $categories = $categories->map(function ($model) {
+         return $model->category;
+     })->toArray();
+     return $categories;
  }
 
 }

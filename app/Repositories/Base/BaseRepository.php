@@ -3,6 +3,8 @@
 namespace App\Repositories\Base;
 
 
+use App\Models\Article;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -33,7 +35,7 @@ abstract class BaseRepository implements IRepository
      * @param array $order
      * @param array $columns
      * @return mixed|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function all(array $order = array(), array $columns = array('*'))
     {
@@ -44,7 +46,7 @@ abstract class BaseRepository implements IRepository
             $querySet = $this->buildNestedOrder($querySet, $order);
 
             $data = $querySet->get($columns);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -57,7 +59,7 @@ abstract class BaseRepository implements IRepository
      * @param array $conditions
      * @param array $columns
      * @return mixed|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function paginate(int $pageSize = 15, array $order = array(), array $conditions = array(), array $columns = array('*')): mixed
     {
@@ -68,7 +70,7 @@ abstract class BaseRepository implements IRepository
 
             $querySet = $this->buildNestedOrder($querySet, $order);
             $data = $querySet->paginate($pageSize, $columns);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -80,7 +82,7 @@ abstract class BaseRepository implements IRepository
      * @param array $order
      * @param array $columns
      * @return mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function where(array $conditions = array(), array $order = array(), array $columns = array('*')): mixed
     {
@@ -88,7 +90,7 @@ abstract class BaseRepository implements IRepository
         $data = null;
         try {
             $data = $this->whereBase($conditions, $order, $columns)->get();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -98,13 +100,13 @@ abstract class BaseRepository implements IRepository
     /**
      * @param array $conditions
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function exists(array $conditions = array()): bool
     {
         try {
             return $this->whereBase($conditions)->exists();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -114,7 +116,7 @@ abstract class BaseRepository implements IRepository
      * @param array $conditions
      * @param array $order
      * @param array $columns
-     * @throws \Exception
+     * @throws Exception
      */
     private function whereBase(array $conditions = array(), array $order = array(), array $columns = array('*'))
     {
@@ -126,7 +128,7 @@ abstract class BaseRepository implements IRepository
             $this->buildNestedOrder($querySet, $order);
 
             return $querySet;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -138,7 +140,7 @@ abstract class BaseRepository implements IRepository
      * @param array $conditions
      * @param array $columns
      * @return mixed|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function with(array $tables = array(), array $conditions = array(), array $columns = array('*')): mixed
     {
@@ -152,7 +154,7 @@ abstract class BaseRepository implements IRepository
                 }]);
             }
             $data = $query->get();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -163,14 +165,14 @@ abstract class BaseRepository implements IRepository
      * @param int $id
      * @param array $columns
      * @return mixed|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function find(int $id, array $columns = array('*'))
     {
         $data = null;
         try {
             $data = $this->persistentModelClass::find($id, $columns);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -183,7 +185,7 @@ abstract class BaseRepository implements IRepository
      * @param array $order
      * @param array $columns
      * @return mixed|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function findByProperty(string $field, string $value, array $order = array(), array $columns = array('*'))
     {
@@ -195,7 +197,7 @@ abstract class BaseRepository implements IRepository
             $this->buildNestedOrder($querySet, $order);
 
             $data = $querySet->get($columns);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -206,14 +208,14 @@ abstract class BaseRepository implements IRepository
      * @param $conditions
      * @param array $columns
      * @return mixed|null
-     * @throws \Exception
+     * @throws Exception
      */
     public function first($conditions, $columns = array('*'))
     {
         $data = null;
         try {
             $data = $this->persistentModelClass::where($conditions)->first($columns);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -223,13 +225,13 @@ abstract class BaseRepository implements IRepository
     /**
      * @param array $data
      * @return Model
-     * @throws \Exception
+     * @throws Exception
      */
     public function create(array $data): ?Model
     {
         try {
             return $this->persistentModelClass::create($data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -238,13 +240,13 @@ abstract class BaseRepository implements IRepository
     /**
      * @param Model $model
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function save(Model $model)
     {
         try {
             return $model->save();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -255,13 +257,13 @@ abstract class BaseRepository implements IRepository
      * @param $attributeValues
      * @param string $attribute
      * @return bool|mixed
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(array $data, $attributeValues, string $attribute = 'id')
     {
         try {
             return $this->persistentModelClass::whereIn($attribute, $attributeValues)->update($data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -270,14 +272,14 @@ abstract class BaseRepository implements IRepository
     /**
      * @param array|int $ids
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function delete($ids): bool
     {
         try {
             $this->persistentModelClass::whereIn('id', $ids)->delete();
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -286,14 +288,14 @@ abstract class BaseRepository implements IRepository
     /**
      * @param $conditions
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function deleteWhere($conditions): bool
     {
         try {
             $this->persistentModelClass::where($conditions)->delete();
             return true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -303,13 +305,13 @@ abstract class BaseRepository implements IRepository
      * @param $relation
      * @param $model
      * @param array $related
-     * @throws \Exception
+     * @throws Exception
      */
     public function syncRelation($relation, $model, array $related): void
     {
         try {
             $model->$relation()->sync($related);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             report($e);
             throw $e;
         }
@@ -344,4 +346,19 @@ abstract class BaseRepository implements IRepository
 
         return $querySet;
     }
+
+    /**
+     * @param array $conditions
+     * @throws Exception
+     */
+    public function distinct(string $field, array $conditions = array(), array $columns = array('*'))
+    {
+        try {
+            return $this->persistentModelClass->where($conditions)->groupBy($field)->distinct()->get($columns);
+        } catch (Exception $e) {
+            report($e);
+            throw $e;
+        }
+    }
 }
+

@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use App\Entities\ArticleDefinition;
-use App\Entities\AuthorDefinition;
-use App\Entities\SourceDefinition;
 use App\Entities\ArticleAuthorDefinition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +32,7 @@ class Article extends Model
      */
     protected $casts = [];
 
-    protected $with = [AuthorDefinition::TABLE_NAME, 'source'];
+    protected $with = [ArticleDefinition::AUTHORS_RELATION, ArticleDefinition::SOURCE_RELATION];
 
     public function authors(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\NewsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,9 +15,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/user', function () {
-    return 'dasdd';
-});
+Route::get('/news', [NewsController::class, 'index']);
+Route::get('/news/categories', [NewsController::class, 'getCategories']);
 
 Route::middleware(['guest'])->group(function () {
     Route::prefix('auth')->group(function () {

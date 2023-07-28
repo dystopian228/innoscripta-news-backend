@@ -102,4 +102,12 @@ interface IRepository
      * @return mixed
      */
     public function syncRelation($relation, $model, array $related);
+
+    /**
+     * @param string $field
+     * @param array $conditions
+     * @param array $columns
+     * @return mixed
+     */
+    public function distinct(string $field, array $conditions = array(), array $columns = array('*'));
 }
