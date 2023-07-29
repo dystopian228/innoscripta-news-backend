@@ -22,7 +22,7 @@ interface IRepository
      * @param array $columns
      * @return mixed
      */
-    public function paginate(int $pageSize = 15, array $order = array(), array $conditions = array(), array $columns = array('*'));
+    public function paginate(int $pageSize = 15, array $order = array(), array $conditions = array(), array $inConditions = array(), array $columns = array('*'));
 
 
     /**
@@ -31,7 +31,7 @@ interface IRepository
      * @param array $columns
      * @return mixed
      */
-    public function where(array $conditions = array(), array $order = array(), array $columns = array('*'));
+    public function where(array $conditions = array(), array $inConditions = array(), array $order = array(), array $columns = array('*'));
 
     /**
      * @param array $conditions
@@ -45,7 +45,7 @@ interface IRepository
      * @param array $columns
      * @return mixed
      */
-    public function with(array $tables = array(), array $conditions = array(), array $columns = array('*'));
+    public function with(array $tables = array(), array $conditions = array(), array $inConditions = array(), array $columns = array('*'));
 
     /**
      * @param $id
@@ -93,7 +93,7 @@ interface IRepository
      * @param $conditions
      * @return bool
      */
-    public function deleteWhere($conditions): bool;
+    public function deleteWhere($conditions, $inConditions): bool;
 
     /**
      * @param $relation
@@ -109,5 +109,14 @@ interface IRepository
      * @param array $columns
      * @return mixed
      */
-    public function distinct(string $field, array $conditions = array(), array $columns = array('*'));
+    public function distinct(string $field, array $conditions = array(), array $inConditions = array(), array $columns = array('*'));
+
+    /**
+     * @param $relation
+     * @param Model $model
+     * @param array $related
+     * @return mixed
+     */
+    public function saveMany($relation, Model $model, array $related);
+
 }

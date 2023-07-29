@@ -3,8 +3,14 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Entities\ArticleAuthorDefinition;
+use App\Entities\UserCategoryDefinition;
 use App\Entities\UserDefinition;
+use App\Entities\UserSourceDefinition;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -36,4 +42,15 @@ class User extends Authenticatable
         UserDefinition::EMAIL_VERIFIED_AT => 'datetime',
         UserDefinition::PASSWORD => 'hashed',
     ];
+
+
+    public function sources(): BelongsToMany
+    {
+        return $this->belongsToMany(Source::class, UserSourceDefinition::TABLE_NAME);
+    }
+
+    public function categories(): HasMany
+    {
+        return $this->hasMany(UserCategory::class);
+    }
 }

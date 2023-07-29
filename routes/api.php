@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\PreferencesController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,4 +28,9 @@ Route::middleware(['guest'])->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('auth/logout', [AuthController::class, 'logout']);
+
+    Route::prefix('/user')->group(function () {
+        Route::resource('/preferences', PreferencesController::class)->only('index');
+        Route::put('/preferences/update', [PreferencesController::class, 'update']);
+    });
 });

@@ -12,6 +12,8 @@ use App\Services\APIs\NewsAPIService;
 use App\Services\APIs\NYTimesService;
 use App\Services\Auth\AuthService;
 use App\Services\Auth\IAuthService;
+use App\Services\Preferences\IPreferencesService;
+use App\Services\Preferences\PreferencesService;
 use Illuminate\Support\ServiceProvider;
 
 class ServiceServiceProvider extends ServiceProvider
@@ -28,5 +30,6 @@ class ServiceServiceProvider extends ServiceProvider
         $this->app->singleton(INewsAPIService::class, NewsAPIService::class);
         $this->app->singleton(INYTimesService::class, NYTimesService::class);
         $this->app->singleton(IAggregatorNewsService::class, AggregatorNewsService::class);
+        $this->app->singleton(IPreferencesService::class, PreferencesService::class);
     }
 }

@@ -61,12 +61,16 @@ abstract class BaseRepository implements IRepository
      * @return mixed|null
      * @throws Exception
      */
-    public function paginate(int $pageSize = 15, array $order = array(), array $conditions = array(), array $columns = array('*')): mixed
+    public function paginate(int $pageSize = 15, array $order = array(), array $conditions = array(), array $inConditions = array(), array $columns = array('*')): mixed
     {
         $order = empty($order) ? $this->defaultOrder : $order;
         $data = null;
         try {
-                $querySet = $this->persistentModelClass::where($conditions);
+            $querySet = $this->persistentModelClass::where($conditions);
+
+            foreach ($inConditions as $column => $values) {
+                $querySet = $querySet->whereIn($column, $values);
+            }
 
             $querySet = $this->buildNestedOrder($querySet, $order);
             $data = $querySet->paginate($pageSize, $columns);
@@ -84,12 +88,12 @@ abstract class BaseRepository implements IRepository
      * @return mixed
      * @throws Exception
      */
-    public function where(array $conditions = array(), array $order = array(), array $columns = array('*')): mixed
+    public function where(array $conditions = array(), array $inConditions = array(), array $order = array(), array $columns = array('*')): mixed
     {
         $order = empty($order) ? $this->defaultOrder : $order;
         $data = null;
         try {
-            $data = $this->whereBase($conditions, $order, $columns)->get();
+            $data = $this->whereBase($conditions, $inConditions, $order, $columns)->get();
         } catch (Exception $e) {
             report($e);
             throw $e;
@@ -118,12 +122,15 @@ abstract class BaseRepository implements IRepository
      * @param array $columns
      * @throws Exception
      */
-    private function whereBase(array $conditions = array(), array $order = array(), array $columns = array('*'))
+    private function whereBase(array $conditions = array(), array $inConditions = array(), array $order = array(), array $columns = array('*'))
     {
         $order = empty($order) ? $this->defaultOrder : $order;
         $data = null;
         try {
             $querySet = $this->persistentModelClass::where($conditions);
+            foreach ($inConditions as $column => $values) {
+                $querySet = $querySet->whereIn($column, $values);
+            }
 
             $this->buildNestedOrder($querySet, $order);
 
@@ -142,11 +149,14 @@ abstract class BaseRepository implements IRepository
      * @return mixed|null
      * @throws Exception
      */
-    public function with(array $tables = array(), array $conditions = array(), array $columns = array('*')): mixed
+    public function with(array $tables = array(), array $conditions = array(), array $inConditions = array(), array $columns = array('*')): mixed
     {
         $data = null;
         try {
             $query = $this->persistentModelClass::where($conditions);
+            foreach ($inConditions as $column => $values) {
+                $query = $query->whereIn($column, $values);
+            }
 
             foreach ($tables as $tableName => $tableConditions) {
                 $query->with([$tableName => function ($query) use (&$tableConditions) {
@@ -210,11 +220,17 @@ abstract class BaseRepository implements IRepository
      * @return mixed|null
      * @throws Exception
      */
-    public function first($conditions, $columns = array('*'))
+    public function first(array $conditions, array $inConditions = array(), $columns = array('*'))
     {
         $data = null;
         try {
-            $data = $this->persistentModelClass::where($conditions)->first($columns);
+            $querySet = $this->persistentModelClass::where($conditions);
+
+            foreach ($inConditions as $column => $values) {
+                $querySet = $querySet->whereIn($column, $values);
+            }
+
+            $data = $querySet->first($columns);
         } catch (Exception $e) {
             report($e);
             throw $e;
@@ -253,6 +269,20 @@ abstract class BaseRepository implements IRepository
     }
 
     /**
+     * @param Model $model
+     * @return bool|mixed
+     * @throws Exception
+     */
+    public function saveMany($relation, Model $model, array $related)
+    {
+        try {
+            return $model->$relation()->saveMany($related);
+        } catch (Exception $e) {
+            report($e);
+            throw $e;
+        }
+    }
+    /**
      * @param array $data
      * @param $attributeValues
      * @param string $attribute
@@ -290,10 +320,17 @@ abstract class BaseRepository implements IRepository
      * @return bool
      * @throws Exception
      */
-    public function deleteWhere($conditions): bool
+    public function deleteWhere($conditions, $inConditions): bool
     {
         try {
-            $this->persistentModelClass::where($conditions)->delete();
+            $querySet = $this->persistentModelClass::where($conditions);
+
+            foreach ($inConditions as $column => $values) {
+                $querySet = $querySet->whereIn($column, $values);
+            }
+
+            $querySet->delete();
+
             return true;
         } catch (Exception $e) {
             report($e);
@@ -351,10 +388,16 @@ abstract class BaseRepository implements IRepository
      * @param array $conditions
      * @throws Exception
      */
-    public function distinct(string $field, array $conditions = array(), array $columns = array('*'))
+    public function distinct(string $field, array $conditions = array(), array $inConditions = array(), array $columns = array('*'))
     {
         try {
-            return $this->persistentModelClass->where($conditions)->groupBy($field)->distinct()->get($columns);
+            $querySet = $this->persistentModelClass->where($conditions);
+
+            foreach ($inConditions as $column => $values) {
+                $querySet = $querySet->whereIn($column, $values);
+            }
+
+            return $querySet->groupBy($field)->distinct()->get($columns);
         } catch (Exception $e) {
             report($e);
             throw $e;
