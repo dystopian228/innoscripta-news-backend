@@ -21,7 +21,7 @@ Route::get('/news/categories', [NewsController::class, 'getCategories']);
 Route::middleware(['guest'])->group(function () {
     Route::prefix('auth')->group(function () {
         Route::post('register', [AuthController::class, 'register']);
-        Route::post('login', [AuthController::class, 'authenticate']);
+        Route::post('authenticate', [AuthController::class, 'authenticate']);
     });
 });
 

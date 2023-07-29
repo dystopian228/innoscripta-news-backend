@@ -7,18 +7,22 @@ use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class AuthService implements IAuthService
 {
-   public function __construct()
-   {}
+    public function __construct()
+    {
+    }
 
-   public function createNewAccessToken($tokenName) {
-       if(Auth::check()) {
+    public function createNewAccessToken($tokenName)
+    {
+        if (Auth::check()) {
             return Auth::user()->createToken($tokenName)->plainTextToken;
-       } else {
-           throw new UnauthorizedHttpException("Unauthenticated.");
-       }
-   }
+        } else {
+            throw new UnauthorizedHttpException("Unauthenticated.");
+        }
+    }
 
-   public function logOutUser() {
+    public function logOutUser()
+    {
+        Auth::guard('web')->logout();
         Auth::user()->tokens()->delete();
-   }
+    }
 }
