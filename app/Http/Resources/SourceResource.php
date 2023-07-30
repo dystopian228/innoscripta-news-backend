@@ -19,6 +19,7 @@ class SourceResource extends JsonResource
         return [
             'id' => $this[BaseFields::ID],
             'name' => $this[SourceDefinition::NAME],
+            'symbol' => $this[SourceDefinition::SYMBOL],
             'description' => $this[SourceDefinition::DESCRIPTION],
             'url' => $this[SourceDefinition::URL],
             'mainCategory' => $this[SourceDefinition::MAIN_CATEGORY],

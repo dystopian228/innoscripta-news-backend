@@ -55,15 +55,12 @@ class NewsAPIService extends BaseNewsService implements INewsAPIService
                     $existingSource = $this->sourceRepository->findByProperty($sourceField, $source[$sourceField]);
                     if (!$existingSource->isEmpty()) {
                         $article->source()->associate($existingSource[0]);
-//                        dd($article);
                         if (isset($existingSource[0][SourceDefinition::MAIN_CATEGORY])) {
                             $article[ArticleDefinition::CATEGORY] = $existingSource[0][SourceDefinition::MAIN_CATEGORY];
                         }
                     } else {
-//                        dd($source);
                         $this->sourceRepository->save($source);
                         $article->source()->associate($source);
-//                        dd($article);
                     }
 
                     $this->articleRepository->save($article);
@@ -79,7 +76,7 @@ class NewsAPIService extends BaseNewsService implements INewsAPIService
                             $authors[0] = $existingAuthor[0];
                         }
 
-                        $upsertedAuthor = $this->authorRepository->save($authors[0]);
+                        $this->authorRepository->save($authors[0]);
                         $article->authors()->attach($authors[0]);
                     }
 

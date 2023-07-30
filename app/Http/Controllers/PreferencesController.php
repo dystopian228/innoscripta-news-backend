@@ -25,7 +25,7 @@ class PreferencesController extends BaseController
         $userCategories = $this->preferencesService->getUserCategories(Auth::user()->id);
         $userSources = $this->preferencesService->getUserSources(Auth::user()->id);
 
-        $categories = $this->aggregatorNewsService->getDistinctCategories();
+        $categories = $this->preferencesService->getDistinctCategories();
         $sources = $this->preferencesService->getSources();
 
         $categoriesPreferences = [];

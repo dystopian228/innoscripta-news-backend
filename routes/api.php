@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/news', [NewsController::class, 'index']);
 Route::get('/news/categories', [NewsController::class, 'getCategories']);
+Route::get('/news/sources', [NewsController::class, 'getSources']);
 
 Route::middleware(['guest'])->group(function () {
     Route::prefix('auth')->group(function () {

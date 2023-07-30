@@ -2,6 +2,7 @@
 
 namespace App\Services\Preferences;
 
+use App\Entities\ArticleDefinition;
 use App\Entities\BaseFields;
 use App\Entities\SourceDefinition;
 use App\Entities\UserCategoryDefinition;
@@ -9,6 +10,7 @@ use App\Entities\UserDefinition;
 use App\Entities\UserSourceDefinition;
 use App\Models\User;
 use App\Models\UserCategory;
+use App\Repositories\Article\IArticleRepository;
 use App\Repositories\Source\ISourceRepository;
 use App\Repositories\User\IUserCategoryRepository;
 use App\Repositories\User\IUserRepository;
@@ -19,12 +21,14 @@ class PreferencesService implements IPreferencesService
     private IUserRepository $userRepository;
     private IUserCategoryRepository $userCategoryRepository;
     private ISourceRepository $sourceRepository;
+    private IArticleRepository $articleRepository;
 
-    public function __construct(IUserRepository $userRepository_, ISourceRepository $sourceRepository_, IUserCategoryRepository $userCategoryRepository_)
+    public function __construct(IUserRepository $userRepository_, ISourceRepository $sourceRepository_, IUserCategoryRepository $userCategoryRepository_, IArticleRepository $articleRepository_)
     {
         $this->userRepository = $userRepository_;
         $this->sourceRepository = $sourceRepository_;
         $this->userCategoryRepository = $userCategoryRepository_;
+        $this->articleRepository = $articleRepository_;
     }
 
     public function updatePreferences(int $userId, array $categories, array $sources): void
@@ -82,6 +86,24 @@ class PreferencesService implements IPreferencesService
         return $sources;
     }
 
+    //There's a better way to do this dynamically than to add a new function
+    public function getUserSourcesIds($userId)
+    {
+        $usersCollection = $this->userRepository->with(tables: [UserDefinition::SOURCES_RELATION => []], conditions: ['id' => $userId], columns: [BaseFields::ID, SourceDefinition::TABLE_NAME . '.' . SourceDefinition::SYMBOL]);
+        if ($usersCollection->isEmpty()) {
+            throw new ModelNotFoundException();
+        }
+
+        /**
+         * @var User $user
+         */
+        $user = $usersCollection[0];
+        $sources = $user->sources->map(function ($model) {
+            return $model->id;
+        })->toArray();
+        return $sources;
+    }
+
     public function getUserCategories($userId)
     {
         $usersCollection = $this->userRepository->with(tables: [UserDefinition::CATEGORIES_RELATION => []], conditions: ['id' => $userId], columns: [BaseFields::ID, UserCategoryDefinition::TABLE_NAME . '.' . UserCategoryDefinition::CATEGORY]);
@@ -101,5 +123,13 @@ class PreferencesService implements IPreferencesService
 
     public function getSources() {
         return $this->sourceRepository->all(order: [SourceDefinition::NAME => 'ASC']);
+    }
+
+    public function getDistinctCategories() {
+        $categories = $this->articleRepository->distinct(ArticleDefinition::CATEGORY, columns: [ArticleDefinition::CATEGORY]);
+        $categories = $categories->map(function ($model) {
+            return $model->category;
+        })->toArray();
+        return $categories;
     }
 }

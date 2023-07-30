@@ -26,7 +26,6 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e): \Illuminate\Http\Response|JsonResponse|RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         if ($e instanceof ModelNotFoundException || $e instanceof NotFoundHttpException) {
-            dd($e);
             if ($request->expectsJson())
                 return response()->json(new Response(null, "The requested resource is not found"), 403);
             else

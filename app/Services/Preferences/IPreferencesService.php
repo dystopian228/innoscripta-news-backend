@@ -29,4 +29,8 @@ interface IPreferencesService
      * @return mixed
      */
     public function getSources();
+
+    public function getDistinctCategories();
+
+    public function getUserSourcesIds($userId);
 }

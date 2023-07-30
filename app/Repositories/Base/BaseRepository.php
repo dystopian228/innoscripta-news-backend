@@ -66,13 +66,23 @@ abstract class BaseRepository implements IRepository
         $order = empty($order) ? $this->defaultOrder : $order;
         $data = null;
         try {
-            $querySet = $this->persistentModelClass::where($conditions);
+            $querySet = $this->persistentModelClass::query();
+
+            foreach ($conditions as $conditionGroup) {
+
+                $querySet->where(function ($query) use ($conditionGroup) {
+                    foreach ($conditionGroup as $condition) {
+                        $query->orWhere(...$condition);
+                    }
+                });
+            }
 
             foreach ($inConditions as $column => $values) {
                 $querySet = $querySet->whereIn($column, $values);
             }
 
             $querySet = $this->buildNestedOrder($querySet, $order);
+
             $data = $querySet->paginate($pageSize, $columns);
         } catch (Exception $e) {
             report($e);
@@ -282,6 +292,7 @@ abstract class BaseRepository implements IRepository
             throw $e;
         }
     }
+
     /**
      * @param array $data
      * @param $attributeValues

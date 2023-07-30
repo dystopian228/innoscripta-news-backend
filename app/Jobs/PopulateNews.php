@@ -27,7 +27,6 @@ class PopulateNews implements ShouldQueue
      */
     public function handle(IAggregatorNewsService $aggregatorNewsService): void
     {
-        echo 'runnnig';
         $aggregatorNewsService->populateAllNews();
     }
 }
