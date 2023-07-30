@@ -9,6 +9,7 @@ RUN apt-get update && \
         libcurl4-gnutls-dev \
         libonig-dev \
         libpq-dev \
+        cron \
         && docker-php-ext-install pdo pgsql bcmath
 
 # Install Composer
