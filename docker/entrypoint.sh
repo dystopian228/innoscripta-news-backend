@@ -34,4 +34,5 @@ EOF
 /usr/sbin/cron
 crontab cronjobs
 
+php artisan run:schedule
 php artisan serve --port=$PORT --host=0.0.0.0
