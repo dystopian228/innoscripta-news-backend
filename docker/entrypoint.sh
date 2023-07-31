@@ -17,6 +17,12 @@ if [ ! -f ".env" ]; then
     sed -s -i -e "s/NYTIMES_API_KEY=/NYTIMES_API_KEY=${NYTIMES_API_KEY}/" /var/www/html/.env
 fi
 
+composer install --no-dev --optimize-autoloader
+php artisan key:generate
+php artisan cache:clear
+php artisan config:clear
+php artisan migrate --force
+
 cat > cronjobs << EOF
 
 SHELL=/bin/bash
@@ -27,11 +33,5 @@ EOF
 
 /usr/sbin/cron
 crontab cronjobs
-
-composer install --no-dev --optimize-autoloader
-php artisan key:generate
-php artisan cache:clear
-php artisan config:clear
-php artisan migrate --force
 
 php artisan serve --port=$PORT --host=0.0.0.0
