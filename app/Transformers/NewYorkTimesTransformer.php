@@ -19,9 +19,9 @@ class NewYorkTimesTransformer extends ITransformer
         $article[ArticleDefinition::TITLE] = $json['headline']['main'];
         $article[ArticleDefinition::HEADLINE] = $json['abstract'];
         $article[ArticleDefinition::LEAD_PARAGRAPH] = $json['lead_paragraph'];
-        $article[ArticleDefinition::ARTICLE_URL] = 'https://www.nytimes.com/' . $json['web_url'];
+        $article[ArticleDefinition::ARTICLE_URL] = $json['web_url'];
         if (!empty($json['multimedia'])) {
-            $article[ArticleDefinition::IMAGE_URL] = $json['multimedia'][0]['url'];
+            $article[ArticleDefinition::IMAGE_URL] = 'https://www.nytimes.com/'. $json['multimedia'][0]['url'];
         }
         $article[ArticleDefinition::PUBLISH_DATE] = Carbon::createFromFormat('Y-m-d\TH:i:sO', $json['pub_date']);
         $article[ArticleDefinition::CATEGORY] = $json['section_name'];
