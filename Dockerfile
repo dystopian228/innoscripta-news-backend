@@ -10,7 +10,7 @@ RUN apt-get update && \
         libonig-dev \
         libpq-dev \
         cron \
-        && docker-php-ext-install pdo pgsql bcmath
+        && docker-php-ext-install pdo pdo_mysql bcmath
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -21,13 +21,8 @@ WORKDIR /var/www/html
 # Copy application files and directories to the container
 COPY . .
 
-# Install application dependencies
-RUN composer install --no-dev --prefer-dist --optimize-autoloader --no-scripts --no-progress --no-suggest
-
 # Set permissions for storage and bootstrap cache directories
 RUN chown -R www-data:www-data storage bootstrap/cache && \
     chmod -R 775 storage bootstrap/cache
 
 EXPOSE 8080
-
-ENTRYPOINT ["./docker/entrypoint.sh"]
